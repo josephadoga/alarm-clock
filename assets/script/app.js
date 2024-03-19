@@ -15,6 +15,8 @@ const inputMinutes = select('.minutes');
 const setAlarm = select('.set');
 const message = select('.message p');
 const output = select('.alarm-set-text');
+const alarmColor = select('.alarm-set i')
+const heading = select('.alarm h1')
 
 const sound = new Audio('./assets/audio/alarm.mp3');
 sound.type = 'audio/mp3';
@@ -32,11 +34,11 @@ function clearInputs() {
 }
 
 function addZeros(hours, minutes) {
-    if (hours < 10) {
+    if (hours < 10 && hours.toString().length < 2) {
         hours = `0${hours}`;
     }
 
-    if (minutes < 10) {
+    if (minutes < 10 && minutes.toString().length < 2) {
         minutes = `0${minutes}`;
     }
 
@@ -67,7 +69,9 @@ function getAlarm() {
     if (isValid(hours) && isValid(minutes)) {
         addZeros(hours, minutes);
         const paddedTime = addZeros(hours, minutes);
+        alarmColor.classList.add('set');
         output.innerText = `${paddedTime.hours}:${paddedTime.minutes}`;
+        message.innerText = 'Alarm has been set!';
         clearInputs();
     } else {
         message.innerText = 'Please enter Valid times';
@@ -77,29 +81,24 @@ function getAlarm() {
     alarm.setMinutes(minutes);
 }
 
-function observe() {
+function check() {
     const now = new Date();
     if ((alarm.getHours() === now.getHours()) && (alarm.getMinutes() === now.getMinutes())) {
         sound.play();
+        heading.classList.add('set');
+        message.innerText = 'Its Time!';
+        setTimeout(() => { 
+            heading.classList.remove('set'); 
+            message.innerText = '';
+        }, 5000);
+    } else {
+        setTimeout(() => {
+            check();
+        }, 1000);
     }
-
-    setTimeout(() => {
-        observe();
-    }, 60000);
 }
 
 listen('click', setAlarm, () => {
     getAlarm();
+    check();
 });
-
-
-listen('load', window, () => {
-    let h = inputHour.value;
-    let m = inputMinutes.value;
-
-    alarm.setHours(h);
-    alarm.setMinutes(m);
-    observe();
-});
-
-window.addEventListener('load', observe());

@@ -68,6 +68,9 @@ form {
 /* input {
     display: block;
 } */
+h1.set {
+    color: #0067ff;
+}
 
 i.set {
     color: #0067ff;
