@@ -23,8 +23,8 @@ sound.type = 'audio/mp3';
 
 const alarm = new Date();
 
-function isValid(input) {
-    if (input.length > 0 && input.length <= 2 && !isNaN(input) && input < 60 ) return true;
+function isValid(input, expectedInput) {
+    if (input.length > 0 && input.length <= 2 && !isNaN(input) && input < expectedInput ) return true;
     return false;
 }
 
@@ -66,7 +66,7 @@ function getAlarm() {
     let hours = inputHour.value;
     let minutes = inputMinutes.value;
 
-    if (isValid(hours) && isValid(minutes)) {
+    if (isValid(hours, 24) && isValid(minutes, 60)) {
         addZeros(hours, minutes);
         const paddedTime = addZeros(hours, minutes);
         alarmColor.classList.add('set');
